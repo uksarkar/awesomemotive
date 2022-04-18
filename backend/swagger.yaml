@@ -1,0 +1,141 @@
+tags:
+- name: Posts
+  description: Posts API
+- name: Comments
+  description: Comments API
+
+paths:
+# [GET] posts
+  /posts:
+    get:
+      tags:
+      - Posts
+      summary: Find All posts
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+# [POST] posts
+    post:
+      tags:
+      - Posts
+      summary: Create Post
+      parameters:
+      - name: Post Data
+        in: body
+        description: The data required to create a post
+        required: true
+        schema:
+          $ref: '#/definitions/Post'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [GET] posts/id
+  /posts/{id}:
+    get:
+      tags:
+      - Posts
+      summary: Find Post By Id
+      parameters:
+      - name: id
+        in: path
+        description: Post Id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [GET] posts/postId/comments
+  /posts/{postId}/comments:
+    get:
+      tags:
+      - Comments
+      summary: Get comments of a post
+      parameters:
+      - name: postId
+        in: path
+        description: Post Id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [POST] posts/postId/comments
+    post:
+      tags:
+      - Comments
+      summary: Add Comment
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        description: The post id where the comment will be store
+      - name: Comment
+        in: body
+        description: The data required to add a comment
+        required: true
+        schema:
+          $ref: '#/definitions/Comment'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+
+# definitions
+definitions:
+  Post:
+    type: object
+    required:
+        - title
+        - content
+    properties:
+      title:
+        type: string
+        description: Post Title
+      content:
+        type: string
+        description: Post Content
+  Comment:
+    type: object
+    required:
+        - name
+        - body
+    properties:
+      name:
+        type: string
+        description: Name of the users
+      body:
+        type: string
+        description: Comment to add
+      commentId:
+        type: integer
+        description: Provide the comment id if it's a replay of a comment
+
+schemes:
+ - https
+ - http

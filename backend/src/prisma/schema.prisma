@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  name      String
+  body      String
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  isReplay  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  commentId Int?
+  replay    Comment?  @relation("CommentToReplay", fields: [commentId], references: [id], onDelete: Cascade)
+  replays   Comment[] @relation("CommentToReplay")
+}
