@@ -65,7 +65,7 @@ It's a basic blog application with SPA using `React` and `Express` for `REST` ap
             npm install
         ```
 
-### Build front end
+### Build frontend
 
         ```bash
             yarn build
