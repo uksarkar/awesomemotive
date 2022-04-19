@@ -24,6 +24,7 @@ const PostList = () => {
         if (r) {
           if (r) {
             dispatch(postListActions.setResponse(r));
+            window.scrollTo(0, 0);
           }
         }
       })

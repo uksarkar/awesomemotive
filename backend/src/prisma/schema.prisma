@@ -12,8 +12,8 @@ generator client {
 
 model Post {
   id        Int       @id @default(autoincrement())
-  title     String
-  content   String
+  title     String    @db.VarChar(500)
+  content   String    @db.LongText
   comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
@@ -24,8 +24,8 @@ model Post {
 model Comment {
   id        Int       @id @default(autoincrement())
   postId    Int
-  name      String
-  body      String
+  name      String    @db.VarChar(500)
+  body      String    @db.LongText
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())

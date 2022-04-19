@@ -17,7 +17,7 @@ class PostController {
    */
   public index = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const page: number = Number(req.params.page) || 1,
+      const page: number = Number(req.query.page) || 1,
             limit: number = 20,
             offset = ((Number.isNaN(page) ? 1:page) - 1) * limit;
 
