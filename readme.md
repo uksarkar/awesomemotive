@@ -73,7 +73,7 @@ It's a basic blog application with SPA using `React` and `Express` for `REST` ap
 
 ## Installations for Backend
 
-Add database credentials to .env.development.local file.
+Add database credentials to `.env.development.local` file.
 
 ### Run those command to `backend` folder
 
@@ -89,7 +89,7 @@ Add database credentials to .env.development.local file.
     yarn prisma:migrate-dev
 ```
 
-### Build front end
+### Build for production
 
 ```bash
     yarn build
