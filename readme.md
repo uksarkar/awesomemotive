@@ -77,11 +77,11 @@ Add database credentials to `.env.development.local` file.
 
 ### Run those command to `backend` folder
 
-        ```bash
-            yarn add
-            #or
-            npm install
-        ```
+```bash
+    yarn add
+    #or
+    npm install
+```
 
 ### Run Migrations
 
