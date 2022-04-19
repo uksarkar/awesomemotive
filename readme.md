@@ -102,3 +102,5 @@ Add database credentials to `.env.development.local` file.
 ```bash
     yarn start
 ```
+
+[Utpal Sarkar](https://github.com/uksarkar)
