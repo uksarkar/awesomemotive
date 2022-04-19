@@ -57,37 +57,48 @@ It's a basic blog application with SPA using `React` and `Express` for `REST` ap
 
 ## Installations for frontend
 
-    > Run those command to `frontend` folder
+### Run those command to `frontend` folder
+
         ```bash
             yarn add
             #or
             npm install
         ```
-    > Build front end
+
+### Build front end
+
         ```bash
             yarn build
         ```
 
 ## Installations for Backend
 
-    - add database credentials to .env.development.local file
-    > Run those command to `backend` folder
+Add database credentials to .env.development.local file.
+
+### Run those command to `backend` folder
+
         ```bash
             yarn add
             #or
             npm install
         ```
-    > Run Migrations
-        ```bash
-            yarn prisma:migrate-dev
-        ```
-    > Build front end
-        ```bash
-            yarn build
-            #or
-            yarn deploy:prod
-        ```
-    > Or start the server
-        ```bash
-            yarn start
-        ```
+
+### Run Migrations
+
+```bash
+    yarn prisma:migrate-dev
+```
+
+### Build front end
+
+```bash
+    yarn build
+    #or
+    yarn deploy:prod
+```
+
+### Or start the server
+
+```bash
+    yarn start
+```
