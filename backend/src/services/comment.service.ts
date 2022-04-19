@@ -6,9 +6,11 @@ import { Comment, PrismaClient } from "@prisma/client";
 export default class CommentService {
     public prisma = new PrismaClient();
 
-    public getComments = (postId: number, commentId?: number): Promise<Comment[]> => {
+    public getComments = async (postId: number, commentId?: number): Promise<Comment[]> => {
         if(isEmpty(postId)) throw new HttpException(400, "Post id is required.");
-        return this.prisma.comment.findMany({where: {postId, commentId: commentId}, orderBy: {createdAt: "desc"}, include: {replays: true}});
+        let comments = await this.prisma.comment.findMany({where: {postId, commentId: commentId || null}, orderBy: {createdAt: "desc"}, include: {_count: {select:{replays: true}}}});
+        const r_comments = comments.map(async c => c._count.replays > 0 ? {...c, replays: await this._loadReplays(c)}:c);
+        return Promise.all(r_comments);
     }
 
     public createComment = async (commentData: CreateCommentDto): Promise<Comment>  => {
@@ -23,5 +25,13 @@ export default class CommentService {
         }
 
         return this.prisma.comment.create({data: commentData});
+    }
+
+    private async _loadReplays(comment: Comment): Promise<Comment[]>{
+        let replays = await this.prisma.comment.findMany({where: {commentId: comment.id}, orderBy: {createdAt: "desc"},  include: {_count: {select:{replays: true}}}});
+        let r_replays = replays.map(async r => {
+            return r._count.replays > 0 ? {...r, replays: await this._loadReplays(r)}:r;
+        });
+        return Promise.all(r_replays);
     }
 }
