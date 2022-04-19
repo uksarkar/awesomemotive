@@ -59,17 +59,17 @@ It's a basic blog application with SPA using `React` and `Express` for `REST` ap
 
 ### Run those command to `frontend` folder
 
-        ```bash
-            yarn add
-            #or
-            npm install
-        ```
+```bash
+    yarn add
+    #or
+    npm install
+```
 
 ### Build frontend
 
-        ```bash
-            yarn build
-        ```
+```bash
+    yarn build
+```
 
 ## Installations for Backend
 
