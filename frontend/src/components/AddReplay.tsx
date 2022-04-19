@@ -1,11 +1,16 @@
+import iziToast from "izitoast";
 import React, { FormEvent, useState } from "react";
+import CommentApi from "../api/CommentApi";
+import IComment from "../interfaces/IComment";
 
 const AddReplay = ({
-  postId,
+  comment,
   onCancel,
+  onAddReplay,
 }: {
-  postId: number;
+  comment: IComment;
   onCancel?: () => void;
+  onAddReplay?: (replay: IComment) => void;
 }) => {
   const [replayForm, setData] = useState({
     name: "",
@@ -36,7 +41,36 @@ const AddReplay = ({
   };
 
   const addReplay = () => {
-    // code
+    setData((pre) => ({ ...pre, isLoading: true }));
+
+    /// make server request
+    CommentApi.createComment(
+      {
+        name: replayForm.name,
+        body: replayForm.comment,
+        commentId: comment.id,
+      },
+      comment.postId
+    )
+      .then((r) => {
+        if (r) {
+          setData((pre) => ({
+            name: "",
+            nameError: "",
+            comment: "",
+            commentError: "",
+            isLoading: false,
+          }));
+          iziToast.success({
+            title: "Replied",
+            message: `You replied to ${comment.name}`,
+          });
+          if (onAddReplay) onAddReplay(r);
+        }
+      })
+      .finally(() => {
+        setData((pre) => ({ ...pre, isLoading: false }));
+      });
   };
 
   return (

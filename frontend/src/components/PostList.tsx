@@ -1,32 +1,56 @@
+import { useSelector } from "react-redux";
+import IRootStore from "../interfaces/IRootStore";
 import Pagination from "./Pagination";
 import PostTitleBox from "./PostTitleBox";
+import { actions as postListActions } from "../stores/post_list/PostListSlice";
+import { useDispatch } from "react-redux";
+import PostApi from "../api/PostApi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const PostList = () => {
-  const list = Array(50)
-    .fill("")
-    .map((v, i) => ({
-      title: `This is test post title of post ${i}`,
-      shortContent:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti facere a itaque corrupti similique eum natus! Ut temporibus tempora ducimus saepe non, ullam vel illo consequuntur, itaque in, possimus porro.",
-    }));
+  const postListStore = useSelector((state: IRootStore) => state.postListStore);
+  const dispatch = useDispatch(),
+    location = useLocation(),
+    navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const pageNo = new URLSearchParams(location.search).get("page") || 1;
+    setCurrentPage((p) => Number(pageNo));
+    dispatch(postListActions.setLoading(true));
+    PostApi.getPosts(Number(pageNo))
+      .then((r) => {
+        if (r) {
+          if (r) {
+            dispatch(postListActions.setResponse(r));
+          }
+        }
+      })
+      .finally(() => {
+        dispatch(postListActions.setLoading(false));
+      });
+  }, [location, dispatch]);
+
+  const paginate = (to: number) => {
+    navigate(`/?page=${to}`);
+  };
 
   return (
     <div className="block">
-      {list.map((v, i) => (
+      {postListStore.posts.map((v, i) => (
         <PostTitleBox
-          key={i}
+          key={v.id}
           title={v.title}
-          shortContent={v.shortContent}
-          id={i}
-          date={new Date().toUTCString()}
+          shortContent={v.content}
+          id={v.id}
+          date={new Date(v.createdAt).toUTCString()}
         ></PostTitleBox>
       ))}
       <Pagination
-        currentIndex={50}
-        totalPage={500}
-        onPaginate={function (index: number): void {
-          console.log(index);
-        }}
+        currentIndex={currentPage}
+        totalPage={postListStore.totalPage}
+        onPaginate={paginate}
       />
       <div className="mt-4"></div>
     </div>

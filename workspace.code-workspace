@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": "backend",
+      "name": "Backend (Express, Typescript, Prisma)"
+    },
+    {
+      "path": "frontend",
+      "name": "Frontend (React, Typescript, Bulma CSS)"
+    },
+    {
+      "path": ".",
+      "name": "Presentation (Express, React, Blog)"
+    }
+  ],
+  "settings": {}
+}

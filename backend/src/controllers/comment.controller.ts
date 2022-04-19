@@ -18,8 +18,9 @@ class CommentController {
    */
   public show = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const postId = Number(req.params.postId);
-      const findAllComments: Comment[] = await this.commentService.getComments(postId);
+      const postId = Number(req.params.postId),
+            commentId = req.query.of && req.query.of !== "null" ? Number(req.query.of):undefined;
+      const findAllComments: Comment[] = await this.commentService.getComments(postId, commentId);
 
       res.status(200).json({ data: findAllComments, message: 'findAll' });
     } catch (error) {

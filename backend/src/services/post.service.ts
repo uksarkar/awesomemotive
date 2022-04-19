@@ -6,8 +6,10 @@ import { isEmpty } from "class-validator";
 export default class PostService {
     public posts = new PrismaClient().post;
 
-  public async findAllPost(): Promise<Post[]> {
-    return this.posts.findMany();
+  public async findAllPost(offset?: number, limit?: number): Promise<{posts: Post[], total: number}> {
+    const posts = await this.posts.findMany({take: limit || 20, skip: offset || 0, orderBy: {createdAt: "desc"}});
+    const total = await this.posts.count();
+    return {posts, total: Math.ceil(total / (limit || 20))}
   }
 
   public async findPostById(postId: number): Promise<Post> {

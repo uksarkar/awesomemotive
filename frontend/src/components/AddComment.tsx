@@ -1,12 +1,21 @@
+import iziToast from "izitoast";
 import React, { FormEvent } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import CommentApi from "../api/CommentApi";
 import IAddCommentStore from "../interfaces/IAddCommentStore";
+import IComment from "../interfaces/IComment";
 import IRootStore from "../interfaces/IRootStore";
 import { actions as addCommentActions } from "../stores/add_comment/addCommentSlice";
 
-const AddComment = () => {
-  const dispatch = useDispatch();
+const AddComment = ({
+  onComment,
+}: {
+  onComment: (comment: IComment) => void;
+}) => {
+  const dispatch = useDispatch(),
+    params = useParams();
 
   const addCommentStore: IAddCommentStore = useSelector(
     (state: IRootStore) => state.addCommentStore
@@ -26,12 +35,30 @@ const AddComment = () => {
     if (!isValidForm) return;
 
     dispatch(addCommentActions.setLoading(true));
+    const postId = Number(params.id);
 
     /// make server request
-    setTimeout(() => {
-      dispatch(addCommentActions.setLoading(false));
-      dispatch(addCommentActions.resetForm(null));
-    }, 3000);
+    if (!Number.isNaN(postId))
+      CommentApi.createComment(
+        {
+          name: addCommentStore.name,
+          body: addCommentStore.content,
+        },
+        postId
+      )
+        .then((r) => {
+          if (r) {
+            dispatch(addCommentActions.resetForm(null));
+            iziToast.success({
+              title: "Created",
+              message: "Comment added successfully.",
+            });
+            onComment(r);
+          }
+        })
+        .finally(() => {
+          dispatch(addCommentActions.setLoading(false));
+        });
   };
 
   return (

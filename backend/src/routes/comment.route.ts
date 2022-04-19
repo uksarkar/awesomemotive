@@ -3,7 +3,7 @@ import { Routes } from '@interfaces/routes.interface';
 import CommentController from '@/controllers/comment.controller';
 
 class CommentRoute implements Routes {
-  public path = '/posts/:postId/comments';
+  public path = '/api/posts/:postId/comments';
   public router = Router();
   public commentController = new CommentController();
 

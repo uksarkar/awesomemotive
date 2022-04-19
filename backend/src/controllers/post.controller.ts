@@ -17,9 +17,13 @@ class PostController {
    */
   public index = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const posts: Post[] = await this.postService.findAllPost();
+      const page: number = Number(req.params.page) || 1,
+            limit: number = 20,
+            offset = ((Number.isNaN(page) ? 1:page) - 1) * limit;
 
-      res.status(200).json({ data: posts, message: 'findAll' });
+      const data = await this.postService.findAllPost(offset, limit);
+
+      res.status(200).json({ data, message: 'findAll' });
     } catch (error) {
       next(error);
     }

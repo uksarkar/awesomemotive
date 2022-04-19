@@ -17,6 +17,8 @@ model Post {
   comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
+
+  @@map("posts")
 }
 
 model Comment {
@@ -25,10 +27,11 @@ model Comment {
   name      String
   body      String
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  isReplay  Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
   commentId Int?
-  replay    Comment?  @relation("CommentToReplay", fields: [commentId], references: [id], onDelete: Cascade)
+  comment   Comment?  @relation("CommentToReplay", fields: [commentId], references: [id], onDelete: Cascade)
   replays   Comment[] @relation("CommentToReplay")
+
+  @@map("comments")
 }

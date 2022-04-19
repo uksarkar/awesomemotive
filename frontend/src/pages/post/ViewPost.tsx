@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import AddComment from "../../components/AddComment";
+import PostApi from "../../api/PostApi";
 import ViewComments from "../../components/ViewComments";
+import IComment from "../../interfaces/IComment";
 import IPost from "../../interfaces/IPost";
 
 const ViewPost = () => {
@@ -13,73 +14,29 @@ const ViewPost = () => {
     navigate(-1);
   };
 
-  useEffect(() => {
-    window.scroll(0, 0);
+  const [postState, setState] = useState<{
+    post: IPost | null;
+    loading: boolean;
+    comments: IComment[];
+  }>({
+    post: null,
+    loading: true,
+    comments: [],
   });
 
-  let post: IPost = {
-    title: "This is post title",
-    content:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores aut aspernatur delectus debitis atque quibusdam, laborum nesciunt modi architecto perspiciatis illo cum, placeat quos sequi accusamus veritatis ducimus non magnam?",
-    created_at: new Date().toUTCString(),
-    comments: [
-      {
-        name: "Utpal Sarkar",
-        comment: "Hello, I don't like that",
-        created_at: new Date().toUTCString(),
-        replays: [
-          {
-            name: "Utpal Sarkar",
-            comment: "Hello, I don't even like that",
-            created_at: new Date().toUTCString(),
-            replays: [
-              {
-                name: "Utpal Sarkar",
-                comment: "Hello, I don't even like that",
-                created_at: new Date().toUTCString(),
-              },
-              {
-                name: "Utpal Sarkar",
-                comment: "Hello, I don't even like that",
-                created_at: new Date().toUTCString(),
-              },
-              {
-                name: "Utpal Sarkar",
-                comment: "Hello, I don't even like that",
-                created_at: new Date().toUTCString(),
-              },
-            ],
-          },
-          {
-            name: "Utpal Sarkar",
-            comment: "Hello, I don't even like that",
-            created_at: new Date().toUTCString(),
-          },
-          {
-            name: "Utpal Sarkar",
-            comment: "Hello, I don't even like that",
-            created_at: new Date().toUTCString(),
-            replays: [
-              {
-                name: "Utpal Sarkar",
-                comment: "Hello, I don't even like that",
-                created_at: new Date().toUTCString(),
-              },
-              {
-                name: "Utpal Sarkar",
-                comment: "Hello, I don't even like that",
-                created_at: new Date().toUTCString(),
-              },
-              {
-                name: "Utpal Sarkar",
-                comment: "Hello, I don't even like that",
-                created_at: new Date().toUTCString(),
-              },
-            ],
-          },
-        ],
-      },
-    ],
+  useEffect(() => {
+    window.scroll(0, 0);
+    getPost();
+  }, []);
+
+  const getPost = () => {
+    PostApi.viewPost(Number(params.id))
+      .then((r) => {
+        if (r) setState((pre) => ({ ...pre, post: r }));
+      })
+      .finally(() => {
+        setState((pre) => ({ ...pre, loading: false }));
+      });
   };
 
   return (
@@ -89,13 +46,25 @@ const ViewPost = () => {
           Back
         </a>
       </div>
-      <div className="block box">
-        <h1 className="title is-4">{post.title}</h1>
-        <p className="subtitle is-5">{post.created_at}</p>
-        <p className="block">{post.content}</p>
-      </div>
-      <AddComment />
-      <ViewComments comments={post.comments} postId={1} />
+      {postState.loading ? (
+        <div className="block box">
+          <div className="is-loading"></div>
+          Loading...
+        </div>
+      ) : !postState.post ? (
+        <div className="block box">Post Not Found.</div>
+      ) : (
+        <React.Fragment>
+          <div className="block box">
+            <h1 className="title is-4">{postState.post.title}</h1>
+            <p className="subtitle is-5">
+              {new Date(postState.post.createdAt).toUTCString()}
+            </p>
+            <p className="block">{postState.post.content}</p>
+          </div>
+          <ViewComments postId={postState.post.id} />
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

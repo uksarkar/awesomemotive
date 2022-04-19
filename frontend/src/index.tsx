@@ -5,10 +5,14 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./stores/store";
+import axios from "axios";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+axios.defaults.withCredentials = true;
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>

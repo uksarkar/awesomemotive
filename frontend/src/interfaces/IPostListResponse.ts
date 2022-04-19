@@ -1,6 +1,6 @@
 import IPost from "./IPost";
 
 export default interface IPostListResponse {
-  totalPage: number;
+  total: number;
   posts: IPost[];
 }

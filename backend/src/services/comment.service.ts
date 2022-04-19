@@ -6,9 +6,9 @@ import { Comment, PrismaClient } from "@prisma/client";
 export default class CommentService {
     public prisma = new PrismaClient();
 
-    public getComments = (postId: number): Promise<Comment[]> => {
+    public getComments = (postId: number, commentId?: number): Promise<Comment[]> => {
         if(isEmpty(postId)) throw new HttpException(400, "Post id is required.");
-        return this.prisma.comment.findMany({where: {postId, commentId: null}, include: {replays: true}});
+        return this.prisma.comment.findMany({where: {postId, commentId: commentId}, orderBy: {createdAt: "desc"}, include: {replays: true}});
     }
 
     public createComment = async (commentData: CreateCommentDto): Promise<Comment>  => {

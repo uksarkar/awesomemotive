@@ -5,6 +5,9 @@ import ICreatedPostStore from "../interfaces/ICreatePostStore";
 import IRootStore from "../interfaces/IRootStore";
 import Modal from "./Modal";
 import { actions as createPostActions } from "../stores/create_post/createPostSlice";
+import { actions as postListActions } from "../stores/post_list/PostListSlice";
+import PostApi from "../api/PostApi";
+import iziToast from "izitoast";
 
 const CreatePost = () => {
   const [showModal, setShowModal] = useState(false);
@@ -31,10 +34,24 @@ const CreatePost = () => {
     dispatch(createPostActions.setLoading(true));
 
     /// make server request
-    setTimeout(() => {
-      dispatch(createPostActions.setLoading(false));
-      dispatch(createPostActions.resetForm(null));
-    }, 3000);
+    PostApi.createPost({
+      title: createPostStore.title,
+      content: createPostStore.content,
+    })
+      .then((r) => {
+        if (r) {
+          dispatch(createPostActions.resetForm(null));
+          iziToast.success({
+            title: "Created",
+            message: "Post created successfully.",
+          });
+          dispatch(postListActions.addPost(r));
+          toggleCreatePostModal();
+        }
+      })
+      .finally(() => {
+        dispatch(createPostActions.setLoading(false));
+      });
   };
 
   return (

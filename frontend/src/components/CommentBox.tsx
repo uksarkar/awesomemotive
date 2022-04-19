@@ -10,6 +10,9 @@ const CommentBox = ({
   isReplay?: boolean;
 }) => {
   const [showAddReplay, setAddReplay] = useState(false);
+  const [replays, setReplays] = useState<IComment[]>([
+    ...(comment.replays || []),
+  ]);
 
   const toggleAddReplay = () => setAddReplay((a) => !a);
 
@@ -17,11 +20,20 @@ const CommentBox = ({
     <div className={isReplay ? "block ml-4" : "block"}>
       <div className="box">
         <h3 className="title is-5 mb-0">{comment.name}</h3>
-        <time className="is-small">{comment.created_at}</time>
-        <p>{comment.comment}</p>
+        <time className="is-small">
+          {new Date(comment.createdAt).toUTCString()}
+        </time>
+        <p>{comment.body}</p>
         <div className="mt-4">
           {showAddReplay ? (
-            <AddReplay postId={5} onCancel={toggleAddReplay}></AddReplay>
+            <AddReplay
+              onAddReplay={(r) => {
+                setReplays((pre) => [r, ...pre]);
+                toggleAddReplay();
+              }}
+              comment={comment}
+              onCancel={toggleAddReplay}
+            ></AddReplay>
           ) : (
             <a
               onClick={(e) => {
@@ -35,7 +47,7 @@ const CommentBox = ({
           )}
         </div>
       </div>
-      {(comment.replays || []).map((r, i) => (
+      {replays.map((r, i) => (
         <CommentBox comment={r} isReplay></CommentBox>
       ))}
     </div>

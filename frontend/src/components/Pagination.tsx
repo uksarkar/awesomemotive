@@ -17,7 +17,9 @@ const Pagination = (props: IPagination) => {
             i < leftBubbles
               ? i === 0
                 ? 1
-                : currentIndex + i - 1
+                : currentIndex !== 1
+                ? currentIndex + i - 1
+                : i + 1
               : i === leftBubbles
               ? "."
               : rightBubbles + i

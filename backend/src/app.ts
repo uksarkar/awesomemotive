@@ -11,6 +11,7 @@ import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import {resolve} from 'path';
 
 class App {
   public app: express.Application;
@@ -50,12 +51,16 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(express.static(resolve(__dirname, "public")));
   }
 
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
       this.app.use('/', route.router);
     });
+    this.app.use("*", (req, res) => {
+      res.sendFile(resolve(__dirname, "public/index.html"));
+    })
   }
 
   private initializeSwagger() {

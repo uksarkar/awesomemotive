@@ -3,7 +3,7 @@ import { Routes } from '@interfaces/routes.interface';
 import PostController from '@/controllers/post.controller';
 
 class PostRoute implements Routes {
-  public path = '/posts';
+  public path = '/api/posts';
   public router = Router();
   public postController = new PostController();
 
